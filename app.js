@@ -103,7 +103,7 @@ app.post(
                 name,
                 email: email.toLowerCase(),
                 username,
-                userType:"User",
+                userType: "User",
                 password, // Will be hashed by the pre-save hook in the model
                 preferredCategories: preferredCategories || [],
                 profilePic: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random`,
@@ -347,11 +347,14 @@ app.get("/api/logout", authenticate, async (req, res) => {
 });
 
 
-app.get("/api/userProfile", authenticate, async (req, res) => {
+app.get("/api/usersList", async (req, res) => {
     try {
-        res.send(req.rootUser);
+        const data = await UsersDB.find()
+        // console.log(data)
+
+        res.send(data);
     } catch (err) {
-        console.log(`Error during Employeee Profile Page -${err}`);
+        console.log(`Error during sending users list -${err}`);
     }
 });
 
@@ -1779,12 +1782,19 @@ app.get('/api/friendFortunes', async (req, res) => {
 // POST - Create new friend fortune
 app.post('/api/newFriendFortune', async (req, res) => {
     try {
-        const { relation, prediction, roastLevel, shareCount } = req.body;
+        const {
+            language,
+            // relation,
+            prediction, 
+            roastLevel, shareCount
+         } = req.body;
         console.log(req.body)
 
 
         // Validation
-        if (!relation || !prediction) {
+        if (
+            // !relation || 
+            !prediction) {
             return res.status(400).json({
                 error: 'Validation failed',
                 message: 'Relation and prediction are required'
@@ -1801,8 +1811,9 @@ app.post('/api/newFriendFortune', async (req, res) => {
         }
 
         const newFortune = new FriendFortuneDB({
-            relation,
+            // relation,
             prediction,
+            language,
             roastLevel: roastLevel || 'friendly',
             shareCount: shareCount || 0
         });
@@ -1819,8 +1830,9 @@ app.post('/api/newFriendFortune', async (req, res) => {
         const updatedFortune = await FriendFortuneDB.findByIdAndUpdate(
             id,
             {
-                relation,
+                // relation,
                 prediction,
+                language,
                 roastLevel: roastLevel || 'friendly',
                 shareCount: shareCount || 0
             },
