@@ -13,6 +13,7 @@ const multer = require("multer");
 const bcryptjs = require("bcryptjs");
 const cookieParser = require("cookie-parser");
 const schedule = require("node-schedule");
+const { body, validationResult } = require('express-validator');
 
 app.use(cookieParser());
 
@@ -38,6 +39,7 @@ const DailyQuestionsDB = require('./models/DailyQuestion');
 const FriendFortuneDB = require('./models/FriendFortune');
 const MummyScoldingDB = require('./models/MummyScolding');
 const SharmaJiBetaDB = require('./models/SharmaJiBeta');
+const ContactMessageDB = require('./models/ContactMessage');
 
 app.post(
     "/api/auth/register",
@@ -1785,9 +1787,9 @@ app.post('/api/newFriendFortune', async (req, res) => {
         const {
             language,
             // relation,
-            prediction, 
+            prediction,
             roastLevel, shareCount
-         } = req.body;
+        } = req.body;
         console.log(req.body)
 
 
@@ -2569,8 +2571,90 @@ app.get('/api/sharmaJiComparisons/stats', async (req, res) => {
 
 
 
+app.post('/contactMessageSubmit',
+    [
+        body('name').trim().notEmpty().withMessage('Name is required'),
+        body('email').isEmail().normalizeEmail().withMessage('Valid email is required'),
+        body('subject').trim().notEmpty().withMessage('Subject is required'),
+        body('message').trim().notEmpty().withMessage('Message is required'),
+        body('inquiryType').isIn(['general', 'support', 'fortune', 'partnership', 'feedback', 'media'])
+    ],
+    async (req, res) => {
+        try {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() });
+            }
 
+            const { name, email, phone, subject, message, inquiryType } = req.body;
 
+            const contactMessage = new ContactMessageDB({
+                name,
+                email,
+                phone,
+                subject,
+                message,
+                inquiryType,
+                ipAddress: req.ip,
+                userAgent: req.get('user-agent')
+            });
+
+            await contactMessage.save();
+
+            // Optional: Send email notification to admin
+            // await sendEmailNotification(contactMessage);
+
+            res.status(201).json({
+                success: true,
+                message: 'Your message has been sent successfully. We will get back to you within 24 hours.',
+                data: {
+                    id: contactMessage._id,
+                    createdAt: contactMessage.createdAt
+                }
+            });
+
+        } catch (error) {
+            console.error('Contact form error:', error);
+            res.status(500).json({
+                success: false,
+                message: 'An error occurred while sending your message. Please try again.'
+            });
+        }
+    }
+);
+
+// GET: Get all contact messages (Admin only - add authentication middleware)
+app.get('/messages', async (req, res) => {
+    try {
+        const { status, inquiryType, page = 1, limit = 20 } = req.query;
+
+        const query = {};
+        if (status) query.status = status;
+        if (inquiryType) query.inquiryType = inquiryType;
+
+        const messages = await ContactMessageDB.find(query)
+            .sort({ createdAt: -1 })
+            .limit(limit * 1)
+            .skip((page - 1) * limit);
+
+        const count = await ContactMessageDB.countDocuments(query);
+
+        res.json({
+            success: true,
+            data: messages,
+            totalPages: Math.ceil(count / limit),
+            currentPage: page,
+            total: count
+        });
+
+    } catch (error) {
+        console.error('Fetch messages error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error fetching messages'
+        });
+    }
+});
 
 
 
