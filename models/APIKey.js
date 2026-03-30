@@ -74,5 +74,5 @@ ApiKeySchema.index({ key: 1 });
 ApiKeySchema.index({ prefix: 1 });
 ApiKeySchema.index({ expiresAt: 1 });
 
-const ApiKey = mongoose.model('Billing_ApiKey', ApiKeySchema);
+const ApiKey = mongoose.model(`${process.env.APP_NAME}_Billing_ApiKey`, ApiKeySchema);
 module.exports = ApiKey;

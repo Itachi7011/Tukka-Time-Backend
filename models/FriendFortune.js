@@ -30,4 +30,4 @@ const FriendFortuneSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-module.exports = mongoose.model('Fortune_FriendFortune', FriendFortuneSchema);
+module.exports = mongoose.model(`${process.env.APP_NAME}_FriendFortune`, FriendFortuneSchema);

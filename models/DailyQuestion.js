@@ -27,4 +27,4 @@ const DailyQuestionSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-module.exports = mongoose.model('Fortune_DailyQuestion', DailyQuestionSchema);
+module.exports = mongoose.model(`${process.env.APP_NAME}_DailyQuestion`, DailyQuestionSchema);

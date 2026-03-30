@@ -111,5 +111,5 @@ const FortuneSchema = new mongoose.Schema({
   timestamps: true
 });
 
-const Fortune = mongoose.model('Fortune_Data', FortuneSchema);
+const Fortune = mongoose.model(`${process.env.APP_NAME}_Data`, FortuneSchema);
 module.exports = Fortune;

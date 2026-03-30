@@ -18,4 +18,4 @@ const MummyScoldingSchema = new mongoose.Schema({
   regionalVariations: [String]
 }, { timestamps: true });
 
-module.exports = mongoose.model('Fortune_MummyScolding', MummyScoldingSchema);
+module.exports = mongoose.model(`${process.env.APP_NAME}_MummyScolding`, MummyScoldingSchema);

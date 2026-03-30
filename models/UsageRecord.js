@@ -42,5 +42,5 @@ UsageRecordSchema.index({ subscriptionId: 1 });
 UsageRecordSchema.index({ metric: 1 });
 UsageRecordSchema.index({ recordedAt: 1 });
 
-const UsageRecord = mongoose.model('Billing_UsageRecord', UsageRecordSchema);
+const UsageRecord = mongoose.model(`${process.env.APP_NAME}_UsageRecord`, UsageRecordSchema);
 module.exports = UsageRecord;

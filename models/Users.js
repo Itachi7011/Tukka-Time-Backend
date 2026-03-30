@@ -310,4 +310,4 @@ UserSchema.methods.comparePassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-module.exports = mongoose.model("Fortune_User", UserSchema);
+module.exports = mongoose.model(`${process.env.APP_NAME}_User`, UserSchema);

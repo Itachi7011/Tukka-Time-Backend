@@ -17,4 +17,4 @@ const SharmaJiBetaSchema = new mongoose.Schema({
   lastUsed: Date
 }, { timestamps: true });
 
-module.exports = mongoose.model('Fortune_SharmaJiBeta', SharmaJiBetaSchema);
+module.exports = mongoose.model(`${process.env.APP_NAME}_SharmaJiBeta`, SharmaJiBetaSchema);

@@ -24,4 +24,4 @@ const WhatsAppStatusSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-module.exports = mongoose.model('Fortune_WhatsAppStatus', WhatsAppStatusSchema);
+module.exports = mongoose.model(`${process.env.APP_NAME}_WhatsAppStatus`, WhatsAppStatusSchema);

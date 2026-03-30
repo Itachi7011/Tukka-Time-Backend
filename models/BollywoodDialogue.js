@@ -20,4 +20,4 @@ const BollywoodDialogueSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-module.exports = mongoose.model('Fortune_BollywoodDialogue', BollywoodDialogueSchema);
+module.exports = mongoose.model(`${process.env.APP_NAME}_BollywoodDialogue`, BollywoodDialogueSchema);

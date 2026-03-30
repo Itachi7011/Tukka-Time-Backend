@@ -34,4 +34,4 @@ const PredictionLogSchema = new mongoose.Schema({
 // Index for faster analytics
 PredictionLogSchema.index({ user: 1, templateType: 1 });
 
-module.exports = mongoose.model("PredictionLog", PredictionLogSchema);
+module.exports = mongoose.model(`${process.env.APP_NAME}_PredictionLog`, PredictionLogSchema);

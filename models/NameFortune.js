@@ -21,4 +21,4 @@ const NameFortuneSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-module.exports = mongoose.model('Fortune_NameFortune', NameFortuneSchema);
+module.exports = mongoose.model(`${process.env.APP_NAME}_NameFortune`, NameFortuneSchema);

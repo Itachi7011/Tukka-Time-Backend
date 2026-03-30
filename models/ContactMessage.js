@@ -46,4 +46,4 @@ const contactMessageSchema = new mongoose.Schema({
   replyMessage: String
 });
 
-module.exports = mongoose.model('Fortune_ContactMessage', contactMessageSchema);
+module.exports = mongoose.model(`${process.env.APP_NAME}_ContactMessage`, contactMessageSchema);
