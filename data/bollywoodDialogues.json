@@ -1,0 +1,218 @@
+[
+  {
+    "style": "amitabh",
+    "template": "<p>{user}, zindagi mein {item} chhota ho sakta hai... lekin tumhara confidence kabhi chhota nahi hona chahiye.</p>",
+    "variables": {
+      "items": ["salary", "room", "attendance", "bank balance"],
+      "outcomes": ["respect milta hai", "log jalte hain", "system hil jaata hai"]
+    },
+    "isPopular": true
+  },
+  {
+    "style": "amitabh",
+    "template": "<p>{user}, tumhara luck aaj {item} ki tarah bhaagega... bas pakadne ki himmat rakho.</p>",
+    "variables": {
+      "items": ["local train", "crypto market", "IPL match", "auto wala"],
+      "outcomes": ["jeet tumhari hogi", "sab confuse ho jayenge", "climax unexpected hoga"]
+    },
+    "isPopular": false
+  },
+  {
+    "style": "amitabh",
+    "template": "<p>Rishte mein toh hum tumhare {item} lagte hain... par aaj destiny ka boss tum khud ho, {user}.</p>",
+    "variables": {
+      "items": ["senior", "mentor", "life coach", "neighbor"],
+      "outcomes": ["history banegi", "sab set ho jayega", "kismat palat jayegi"]
+    },
+    "isPopular": true
+  },
+  {
+    "style": "rajinikanth",
+    "template": "<p>{user}, tum {item} ko control nahi karte... {item} tumse permission leta hai.</p>",
+    "variables": {
+      "items": ["WiFi", "traffic", "weather", "luck"],
+      "outcomes": ["sab line pe aa jayega", "duniya hil jayegi", "system reboot ho jayega"]
+    },
+    "isPopular": true
+  },
+  {
+    "style": "rajinikanth",
+    "template": "<p>{user}, jab tum {item} dekhte ho... toh problems khud logout ho jaati hain.</p>",
+    "variables": {
+      "items": ["mirror", "bank account", "crush", "future"],
+      "outcomes": ["jeet fix hai", "hero entry ho chuki hai", "villain bhaag gaya"]
+    },
+    "isPopular": false
+  },
+  {
+    "style": "rajinikanth",
+    "template": "<p>{user}, tumhara swag {item} se bhi zyada dangerous hai... handle sambhal ke karna.</p>",
+    "variables": {
+      "items": ["rocket launch", "exam result", "Bigg Boss fight", "stock market"],
+      "outcomes": ["public pagal ho jayegi", "legend ban jaoge", "sab shock ho jayenge"]
+    },
+    "isPopular": true
+  },
+  {
+    "style": "tapori",
+    "template": "<p>Apun bolta hai {user}, tera {item} full jhakaas hai re baba!</p>",
+    "variables": {
+      "items": ["style", "luck", "attitude", "entry"],
+      "outcomes": ["public set hai", "scene on hai", "game strong hai"]
+    },
+    "isPopular": true
+  },
+  {
+    "style": "tapori",
+    "template": "<p>{user}, life mein tension lene ka nahi... {item} karne ka.</p>",
+    "variables": {
+      "items": ["chai", "timepass", "party", "selfie"],
+      "outcomes": ["fulltoo maza aayega", "apun king banega", "system hang ho jayega"]
+    },
+    "isPopular": false
+  },
+  {
+    "style": "tapori",
+    "template": "<p>{user}, tera scene aaj {item} jaisa hai... unpredictable par mast!</p>",
+    "variables": {
+      "items": ["Mumbai rain", "auto meter", "college attendance", "IPL auction"],
+      "outcomes": ["full paisa vasool", "jhakaas ending", "hero wali vibe"]
+    },
+    "isPopular": true
+  },
+  {
+    "style": "kareena",
+    "template": "<p>{user}, tumhari vibe aaj full {item} energy de rahi hai... iconic and unstoppable.</p>",
+    "variables": {
+      "items": ["Poo", "fashion week", "viral reel", "red carpet"],
+      "outcomes": ["sab jealous honge", "spotlight tumhari hai", "trend tumse shuru hoga"]
+    },
+    "isPopular": true
+  },
+  {
+    "style": "kareena",
+    "template": "<p>{user}, agar confidence ka naam {item} hota... toh woh tum hote.</p>",
+    "variables": {
+      "items": ["luxury brand", "award show", "Bollywood comeback", "designer outfit"],
+      "outcomes": ["camera tumpe hi rahega", "sab copy karenge", "entry viral hogi"]
+    },
+    "isPopular": false
+  },
+  {
+    "style": "kareena",
+    "template": "<p>{user}, tumhari life ka next chapter full {item} vibes dene wala hai.</p>",
+    "variables": {
+      "items": ["Netflix drama", "fashion montage", "airport look", "celebrity gossip"],
+      "outcomes": ["audience hooked rahegi", "TRP high rahegi", "everyone obsessed ho jayega"]
+    },
+    "isPopular": true
+  },
+  {
+    "style": "amitabh",
+    "template": "<p>{user}, aadmi ka asli test tab hota hai jab {item} fail ho jaaye.</p>",
+    "variables": {
+      "items": ["WiFi", "plan", "relationship", "motivation"],
+      "outcomes": ["legend wahi banta hai", "story interesting ho jaati hai", "hero ubhar ke aata hai"]
+    },
+    "isPopular": false
+  },
+  {
+    "style": "rajinikanth",
+    "template": "<p>{user}, tum jab {item} karte ho... toh Google bhi notes leta hai.</p>",
+    "variables": {
+      "items": ["coding", "dance", "sleep", "negotiation"],
+      "outcomes": ["internet hil jaata hai", "AI bhi confuse ho jaata hai", "public standing ovation deti hai"]
+    },
+    "isPopular": true
+  },
+  {
+    "style": "tapori",
+    "template": "<p>{user}, apun ko lagta hai tera {item} direct blockbuster material hai.</p>",
+    "variables": {
+      "items": ["love life", "attitude", "comeback", "jugaad"],
+      "outcomes": ["public seeti maaregi", "fulltoo hit hoga", "hero entry bajegi"]
+    },
+    "isPopular": false
+  },
+  {
+    "style": "kareena",
+    "template": "<p>{user}, basic hona tumhare syllabus mein kabhi tha hi nahi... especially with that {item} energy.</p>",
+    "variables": {
+      "items": ["queen", "runway", "main character", "luxury"],
+      "outcomes": ["everyone watches you", "drama follows automatically", "spotlight permanent ho jaata hai"]
+    },
+    "isPopular": true
+  },
+  {
+    "style": "amitabh",
+    "template": "<p>{user}, aaj tumhara {item} hi tumhari pehchaan banega.</p>",
+    "variables": {
+      "items": ["discipline", "silence", "confidence", "timing"],
+      "outcomes": ["duniya yaad rakhegi", "baazi palat jayegi", "sab impress ho jayenge"]
+    },
+    "isPopular": false
+  },
+  {
+    "style": "rajinikanth",
+    "template": "<p>{user}, tumhare aane se pehle {item} normal tha... ab legendary ho gaya.</p>",
+    "variables": {
+      "items": ["office", "party", "college", "WhatsApp group"],
+      "outcomes": ["system overload", "mass entry", "public celebration"]
+    },
+    "isPopular": true
+  },
+  {
+    "style": "tapori",
+    "template": "<p>{user}, tera mood aaj full {item} mode mein hai re.</p>",
+    "variables": {
+      "items": ["bhai", "don", "hero", "rockstar"],
+      "outcomes": ["apun proud hai", "public hil gayi", "scene solid hai"]
+    },
+    "isPopular": false
+  },
+  {
+    "style": "kareena",
+    "template": "<p>{user}, tumhare standards itne high hain ki {item} bhi nervous ho jaaye.</p>",
+    "variables": {
+      "items": ["luxury hotels", "fashion brands", "Bollywood stars", "influencers"],
+      "outcomes": ["competition khatam", "everyone copies you", "spotlight automatic"]
+    },
+    "isPopular": true
+  },
+  {
+    "style": "amitabh",
+    "template": "<p>{user}, jo aadmi {item} se nahi darta... usse duniya bhi nahi rok sakti.</p>",
+    "variables": {
+      "items": ["failure", "criticism", "Monday mornings", "rejection"],
+      "outcomes": ["kahani badal jaati hai", "history likhi jaati hai", "hero paida hota hai"]
+    },
+    "isPopular": true
+  },
+  {
+    "style": "rajinikanth",
+    "template": "<p>{user}, tumhari entry dekh ke {item} bhi slow motion mein aa gaya.</p>",
+    "variables": {
+      "items": ["wind", "traffic", "camera", "background music"],
+      "outcomes": ["mass scene create hua", "public pagal ho gayi", "legendary moment ban gaya"]
+    },
+    "isPopular": false
+  },
+  {
+    "style": "tapori",
+    "template": "<p>{user}, tera luck aaj fulltoo {item} nikla re baba.</p>",
+    "variables": {
+      "items": ["jackpot", "item song", "mass entry", "festival sale"],
+      "outcomes": ["paisa vasool day", "jhakaas comeback", "apun impressed"]
+    },
+    "isPopular": true
+  },
+  {
+    "style": "kareena",
+    "template": "<p>{user}, tumhari aura itni premium hai ki {item} bhi VIP feel kare.</p>",
+    "variables": {
+      "items": ["airport", "cafe", "party", "office"],
+      "outcomes": ["everyone stares", "paparazzi activate", "drama starts automatically"]
+    },
+    "isPopular": false
+  }
+]

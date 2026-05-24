@@ -41,6 +41,8 @@ const MummyScoldingDB = require('./models/MummyScolding');
 const SharmaJiBetaDB = require('./models/SharmaJiBeta');
 const ContactMessageDB = require('./models/ContactMessage');
 
+const seedFortunes = require("./seeders/seedMummyScoldings");
+
 app.post(
     "/api/auth/register",
     async (req, res) => {
@@ -560,6 +562,453 @@ app.put("/api/userProfile/security", authenticate, async (req, res) => {
             message: "Failed to update password"
         });
     }
+});
+
+// ============ FORTUNES APIs ============
+
+// GET random fortune
+app.get("/api/fortunes/random", async (req, res) => {
+  try {
+    const count = await FortunesDB.countDocuments({ isActive: true });
+    const random = Math.floor(Math.random() * count);
+    const fortune = await FortunesDB.findOne({ isActive: true }).skip(random);
+    
+    // Update times served
+    if (fortune) {
+      fortune.timesServed += 1;
+      fortune.lastServedAt = new Date();
+      await fortune.save();
+    }
+    
+    res.status(200).json(fortune);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET all fortunes (paginated)
+app.get("/api/fortunes", async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const skip = (page - 1) * limit;
+    
+    const fortunes = await FortunesDB.find({ isActive: true })
+      .sort({ timesServed: -1 })
+      .skip(skip)
+      .limit(limit);
+    
+    const total = await FortunesDB.countDocuments({ isActive: true });
+    
+    res.status(200).json({
+      fortunes,
+      currentPage: page,
+      totalPages: Math.ceil(total / limit),
+      total
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST create new fortune
+app.post("/api/fortunes", authenticate, async (req, res) => {
+  try {
+    const fortune = new FortunesDB(req.body);
+    await fortune.save();
+    res.status(201).json(fortune);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// PUT update fortune share count
+app.put("/api/fortunes/:id/share", async (req, res) => {
+  try {
+    const fortune = await FortunesDB.findById(req.params.id);
+    if (fortune) {
+      fortune.shareCount += 1;
+      await fortune.save();
+      res.status(200).json({ shareCount: fortune.shareCount });
+    } else {
+      res.status(404).json({ error: "Fortune not found" });
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ============ SHARMA JI BETA APIs ============
+
+// GET random Sharma Ji comparison
+app.get("/api/sharma-ji/random", async (req, res) => {
+  try {
+    const count = await SharmaJiBetaDB.countDocuments();
+    const random = Math.floor(Math.random() * count);
+    const comparison = await SharmaJiBetaDB.findOne().skip(random);
+    
+    if (comparison) {
+      comparison.lastUsed = new Date();
+      await comparison.save();
+    }
+    
+    res.status(200).json(comparison);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET all Sharma Ji comparisons
+app.get("/api/sharma-ji", async (req, res) => {
+  try {
+    const comparisons = await SharmaJiBetaDB.find()
+      .sort({ createdAt: -1 });
+    res.status(200).json(comparisons);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST create new Sharma Ji comparison
+app.post("/api/sharma-ji", authenticate, async (req, res) => {
+  try {
+    const comparison = new SharmaJiBetaDB(req.body);
+    await comparison.save();
+    res.status(201).json(comparison);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ============ MUMMY SCOLDING APIs ============
+
+// GET random Mummy scolding
+app.get("/api/mummy-scolding/random", async (req, res) => {
+  try {
+    const count = await MummyScoldingDB.countDocuments();
+    const random = Math.floor(Math.random() * count);
+    const scolding = await MummyScoldingDB.findOne().skip(random);
+    res.status(200).json(scolding);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET all Mummy scoldings
+app.get("/api/mummy-scolding", async (req, res) => {
+  try {
+    const scoldings = await MummyScoldingDB.find()
+      .sort({ severity: -1, createdAt: -1 });
+    res.status(200).json(scoldings);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST create new Mummy scolding
+app.post("/api/mummy-scolding", authenticate, async (req, res) => {
+  try {
+    const scolding = new MummyScoldingDB(req.body);
+    await scolding.save();
+    res.status(201).json(scolding);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ============ DASHBOARD STATS API ============
+
+// GET dashboard statistics
+app.get("/api/dashboard/stats", async (req, res) => {
+  try {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const [totalFortunes, totalSharmaJi, totalMummyScoldings, totalUsers] = await Promise.all([
+      FortunesDB.countDocuments({ isActive: true }),
+      SharmaJiBetaDB.countDocuments(),
+      MummyScoldingDB.countDocuments(),
+      UsersDB.countDocuments()
+    ]);
+    
+    // Get today's served fortunes
+    const todaysFortunes = await FortunesDB.countDocuments({
+      lastServedAt: { $gte: today }
+    });
+    
+    res.status(200).json({
+      totalFortunes,
+      totalSharmaJi,
+      totalMummyScoldings,
+      totalUsers,
+      todaysFortunes
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ============ FRIEND FORTUNES APIs ============
+
+// GET random friend fortune
+app.get("/api/friend-fortune/random", async (req, res) => {
+  try {
+    const count = await FriendFortuneDB.countDocuments();
+    if (count === 0) {
+      return res.status(404).json({ error: "No friend fortunes found" });
+    }
+    const random = Math.floor(Math.random() * count);
+    const fortune = await FriendFortuneDB.findOne().skip(random);
+    res.status(200).json(fortune);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET all friend fortunes
+app.get("/api/friend-fortune", async (req, res) => {
+  try {
+    const fortunes = await FriendFortuneDB.find().sort({ createdAt: -1 });
+    res.status(200).json(fortunes);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET friend fortunes by language
+app.get("/api/friend-fortune/language/:language", async (req, res) => {
+  try {
+    const language = req.params.language;
+    const fortunes = await FriendFortuneDB.find({
+      language: { $regex: language, $options: 'i' }
+    });
+    res.status(200).json(fortunes);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST create new friend fortune
+app.post("/api/friend-fortune", authenticate, async (req, res) => {
+  try {
+    const fortune = new FriendFortuneDB(req.body);
+    await fortune.save();
+    res.status(201).json(fortune);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// PUT update share count
+app.put("/api/friend-fortune/:id/share", async (req, res) => {
+  try {
+    const fortune = await FriendFortuneDB.findById(req.params.id);
+    if (fortune) {
+      fortune.shareCount += 1;
+      await fortune.save();
+      res.status(200).json({ shareCount: fortune.shareCount });
+    } else {
+      res.status(404).json({ error: "Fortune not found" });
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ============ DAILY QUESTIONS APIs ============
+
+// GET random daily question
+app.get("/api/daily-question/random", async (req, res) => {
+  try {
+    const count = await DailyQuestionsDB.countDocuments({ isActive: true });
+    if (count === 0) {
+      return res.status(404).json({ error: "No daily questions found" });
+    }
+    const random = Math.floor(Math.random() * count);
+    const question = await DailyQuestionsDB.findOne({ isActive: true }).skip(random);
+    res.status(200).json(question);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET all daily questions
+app.get("/api/daily-question", async (req, res) => {
+  try {
+    const questions = await DailyQuestionsDB.find({ isActive: true })
+      .sort({ date: -1 });
+    res.status(200).json(questions);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST vote on daily question
+app.post("/api/daily-question/:id/vote", async (req, res) => {
+  try {
+    const { option } = req.body;
+    const question = await DailyQuestionsDB.findById(req.params.id);
+    
+    if (!question) {
+      return res.status(404).json({ error: "Question not found" });
+    }
+    
+    // Handle voting based on your schema structure
+    if (option === 'yes') {
+      question.options[0].yes += 1;
+    } else if (option === 'no') {
+      question.options[0].no += 1;
+    } else if (option === 'maybe') {
+      question.options[0].maybe += 1;
+    }
+    
+    await question.save();
+    res.status(200).json({ 
+      votes: {
+        yes: question.options[0].yes,
+        no: question.options[0].no,
+        maybe: question.options[0].maybe
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST create new daily question
+app.post("/api/daily-question", authenticate, async (req, res) => {
+  try {
+    const question = new DailyQuestionsDB({
+      ...req.body,
+      options: [{ yes: 0, no: 0, maybe: 0 }]
+    });
+    await question.save();
+    res.status(201).json(question);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET today's question
+app.get("/api/daily-question/today", async (req, res) => {
+  try {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const question = await DailyQuestionsDB.findOne({
+      isActive: true,
+      date: { $gte: today }
+    }).sort({ date: -1 });
+    
+    if (!question) {
+      // If no question for today, get the latest active question
+      const latestQuestion = await DailyQuestionsDB.findOne({ isActive: true })
+        .sort({ date: -1 });
+      return res.status(200).json(latestQuestion);
+    }
+    
+    res.status(200).json(question);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ============ BOLLYWOOD DIALOGUES APIs ============
+
+// GET random Bollywood dialogue
+app.get("/api/bollywood-dialogue/random", async (req, res) => {
+  try {
+    const count = await BollywoodDialogueDB.countDocuments();
+    if (count === 0) {
+      return res.status(404).json({ error: "No Bollywood dialogues found" });
+    }
+    const random = Math.floor(Math.random() * count);
+    const dialogue = await BollywoodDialogueDB.findOne().skip(random);
+    res.status(200).json(dialogue);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET all Bollywood dialogues
+app.get("/api/bollywood-dialogue", async (req, res) => {
+  try {
+    const dialogues = await BollywoodDialogueDB.find()
+      .sort({ isPopular: -1, createdAt: -1 });
+    res.status(200).json(dialogues);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET Bollywood dialogues by style
+app.get("/api/bollywood-dialogue/style/:style", async (req, res) => {
+  try {
+    const style = req.params.style;
+    const dialogues = await BollywoodDialogueDB.find({ 
+      style: { $regex: style, $options: 'i' }
+    });
+    res.status(200).json(dialogues);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET popular Bollywood dialogues
+app.get("/api/bollywood-dialogue/popular", async (req, res) => {
+  try {
+    const dialogues = await BollywoodDialogueDB.find({ isPopular: true });
+    res.status(200).json(dialogues);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST create new Bollywood dialogue
+app.post("/api/bollywood-dialogue", authenticate, async (req, res) => {
+  try {
+    const dialogue = new BollywoodDialogueDB(req.body);
+    await dialogue.save();
+    res.status(201).json(dialogue);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST generate dialogue with custom variables
+app.post("/api/bollywood-dialogue/generate", async (req, res) => {
+  try {
+    const { dialogueId, customItem, customOutcome } = req.body;
+    
+    const dialogue = await BollywoodDialogueDB.findById(dialogueId);
+    if (!dialogue) {
+      return res.status(404).json({ error: "Dialogue not found" });
+    }
+    
+    // Select random item and outcome from variables
+    const items = dialogue.variables.items;
+    const outcomes = dialogue.variables.outcomes;
+    
+    const selectedItem = customItem || items[Math.floor(Math.random() * items.length)];
+    const selectedOutcome = customOutcome || outcomes[Math.floor(Math.random() * outcomes.length)];
+    
+    // Replace variables in template
+    let generatedText = dialogue.template
+      .replace(/{user}/g, req.body.user || 'Tum')
+      .replace(/{item}/g, selectedItem)
+      .replace(/{twist}/g, selectedOutcome);
+    
+    res.status(200).json({
+      originalDialogue: dialogue,
+      generatedText,
+      usedVariables: {
+        item: selectedItem,
+        outcome: selectedOutcome
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 app.post('/api/newFortune', async (req, res) => {
@@ -2781,6 +3230,8 @@ app.get("/api/response-time", (req, res) => {
 });
 
 
+
+seedFortunes();
 
 app.listen(PORT, () => {
     console.log("Server is running on : ", PORT);
