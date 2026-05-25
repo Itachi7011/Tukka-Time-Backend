@@ -41,7 +41,9 @@ const MummyScoldingDB = require('./models/MummyScolding');
 const SharmaJiBetaDB = require('./models/SharmaJiBeta');
 const ContactMessageDB = require('./models/ContactMessage');
 
-const seedFortunes = require("./seeders/seedMummyScoldings");
+// const seedFortunes = require("./seeders/seedMummyScoldings");
+
+const schedulerManager = require("./config/scheduler");
 
 app.post(
     "/api/auth/register",
@@ -3231,9 +3233,10 @@ app.get("/api/response-time", (req, res) => {
 
 
 
-seedFortunes();
+// seedFortunes();
 
 app.listen(PORT, () => {
     console.log("Server is running on : ", PORT);
+     schedulerManager.initialize();
 });
 
