@@ -43,7 +43,7 @@ const ContactMessageDB = require('./models/ContactMessage');
 
 // const seedFortunes = require("./seeders/seedMummyScoldings");
 
-const schedulerManager = require("./config/scheduler");
+// const schedulerManager = require("./config/scheduler");
 
 app.post(
     "/api/auth/register",
@@ -3237,6 +3237,6 @@ app.get("/api/response-time", (req, res) => {
 
 app.listen(PORT, () => {
     console.log("Server is running on : ", PORT);
-     schedulerManager.initialize();
+    //  schedulerManager.initialize();
 });
 
